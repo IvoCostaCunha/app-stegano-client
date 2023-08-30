@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../contexts/AuthContext';
 import Copyright from './Copyright';
 
-import background from '../media/signin-background.png'
+import background from '../assets/background.png'
+import logo from '../assets/logo.png'
 
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
@@ -34,7 +35,6 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(background)
     setLoading(true)
 
     const formData = new FormData(e.currentTarget);
@@ -66,20 +66,21 @@ export default function SignIn() {
       </Snackbar>
 
 
+      
       <Grid
         item
         xs={false}
         sm={4}
         md={7}
         sx={{
-          backgroundImage: 'background',
+          background: 'url(https://picsum.photos/1920/1080)',
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-        }}
-      />
+        }}/>
+
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
           sx={{
@@ -90,9 +91,10 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          <Box padding={2}>
+            <img src={logo} style={{ width: '5vh', width: '5vw', borderRadius: '10%' }} />
+          </Box>
+
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
@@ -138,7 +140,7 @@ export default function SignIn() {
 
           <Grid container align='center'>
             <Grid item xs={12}>
-              <br/>
+              <br />
               <Link href="#" variant="body2">
                 Forgot password? (TODO on API side)
               </Link>

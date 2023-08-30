@@ -14,7 +14,7 @@ export default class DataContextProvider extends Component {
 
   requestDownload = async (filesId, id) => {
     try {
-      const request = await fetch('http://localhost:5000/api/0.1/files/upload-request', {
+      const request = await fetch('https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/upload-request', {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -44,7 +44,7 @@ export default class DataContextProvider extends Component {
 
   sendPngFiles = async (id, files) => {
     try {
-      const request = await fetch("http://localhost:5000/api/0.1/files/upload", {
+      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/upload", {
         method: "POST",
         body: files
       })
@@ -56,7 +56,7 @@ export default class DataContextProvider extends Component {
 
         const downloadId = requestJSON.download_id
 
-        const downloadRequest = await fetch("http://localhost:5000/api/0.1/files/download-request", {
+        const downloadRequest = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/download-request", {
           method: "POST",
           headers: {
             'Accept': 'application/json',

@@ -19,7 +19,7 @@ export default class AuthContextProvider extends Component {
 
   signIn = async (signInData) => {
     try {
-      const request = await fetch("http://localhost:5000/api/0.1/auth/signin", {
+      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signin", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -66,7 +66,7 @@ export default class AuthContextProvider extends Component {
   signOut = async () => {
     // Send request to purge user token on API
     try {
-      const request = await fetch(`http://localhost:5000/api/0.1/auth/signout`, {
+      const request = await fetch(`https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signout`, {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -98,7 +98,7 @@ export default class AuthContextProvider extends Component {
 
   signUp = async (signUpData) => {
     try {
-      let request = await fetch("http://localhost:5000/api/0.1/auth/signup", {
+      let request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/0.1/auth/signup", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -129,7 +129,7 @@ export default class AuthContextProvider extends Component {
 
   updateUser = async (updateData) => {
     try {
-      let request = await fetch("http://localhost:5000/api/0.1/user/updateuser", {
+      let request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/user/updateuser", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -165,7 +165,7 @@ export default class AuthContextProvider extends Component {
 
   verifyToken = async () => {
     try {
-      const request = await fetch("http://localhost:5000/api/0.1/auth/verifytoken", {
+      const request = await fetch("hhttps://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/verifytoken", {
         method: "POST",
         headers: {
           'Accept': 'application/json',

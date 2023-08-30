@@ -7,6 +7,8 @@ export default class AppContextProvider extends Component {
         super(props)
         this.state = {
           currentPage: "SignIn",
+          apiUrlHeroku: 'https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/',
+          apiUrlLocal: ' http://127.0.0.1:5000/api/0.1/'
         }
     }
 

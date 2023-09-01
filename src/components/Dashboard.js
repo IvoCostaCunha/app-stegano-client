@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Navbar from './Navbar';
 import Copyright from './Copyright';
@@ -18,25 +18,13 @@ export default function Dashboard(props) {
   const [severity, setSeverity] = useState('success')
   const [status, setStatus] = useState('')
   const [showStatus, setShowStatus] = useState(false)
+  const [loaded, setLoaded] = useState(false)
   const handleClose = async () => { setShowStatus(false) }
 
-  const [userImgs, setUserImgs] = useState([
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" },
-    { filename: 'test', url: "https://picsum.photos/1920/1080" }
-  ])
+  const [userImgs, setUserImgs] = useState([])
 
   const handleDownload = async (img) => {
-    const response = await dataContext.downloadFileFromUrl(img.url, img.filename + authContext.username)
+    const response = await dataContext.dowloadFileFromAWS(img.url)
     if (response.confirmation) {
       setSeverity('success')
       setStatus(response.message + ` (code: ${response.code})`)
@@ -47,6 +35,30 @@ export default function Dashboard(props) {
     }
     setShowStatus(true)
   }
+
+  const getImgs = async () => {
+    if(loaded) return null
+    const response = await dataContext.getPngFilesFromId(authContext.id)
+    if(response.confirmation) {
+      response.data.forEach(url => {
+        setUserImgs(prevState => [...prevState, {url: url}]);
+      });
+      setSeverity('success')
+      setStatus(response.message + ` (code: ${response.code})`)
+    }
+    else {
+      setSeverity('error')
+      setStatus(response.error + ` (code: ${response.code})`)
+    }
+    setShowStatus(true)
+    console.log('1')
+  }
+
+
+  useEffect( () => {
+    getImgs()
+    setLoaded(true)
+  })
 
   return (
     <Box sx={{ display: 'flex' }}>

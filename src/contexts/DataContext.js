@@ -68,11 +68,15 @@ export default class DataContextProvider extends Component {
           }),
         })
 
-        const downloadRequestData = downloadRequest.files()
+        const downloadRequestJSON = await downloadRequest.json()
 
-        console.log(files)
+        if (downloadRequest.status == 200) {
+          downloadRequestJSON['urls'].forEach(url => {
+            this.dowloadFileFromAWS(url)
+          })
+          return { message: requestJSON.message, confirmation: true, code: request.status }
+        }
 
-        return { message: requestJSON.message, confirmation: true, code: request.status }
       }
       else {
         return { error: requestJSON.error, confirmation: false, code: request.status }
@@ -84,7 +88,33 @@ export default class DataContextProvider extends Component {
     }
   }
 
-  getPngFiles = async (id) => {
+  getPngFilesFromId = async (id) => {
+    try {
+      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/getfilesbyid", {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: id
+        }),
+      })
+
+      const requestJSON = await request.json()
+
+      if (request.status === 200) {
+        return { message: requestJSON.message, confirmation: true, code: request.status, data: requestJSON.urls }
+      }
+      else {
+        return { error: requestJSON.error, confirmation: true, code: request.status }
+      }
+
+
+    } catch (err) {
+      console.log(err)
+      return { error: err.message, confirmation: false, code: "Unknown" }
+    }
     return id
   }
 
@@ -104,10 +134,21 @@ export default class DataContextProvider extends Component {
         a.remove()
         return { message: "Download sucessful.", confirmation: true, code: request.status }
       }
+      else {
+        return { error: "Download failed.", confirmation: false, code: request.status }
+      }
     } catch (err) {
       console.log(err)
       return { error: 'Download failed.', confirmation: false, code: "Unknown" }
     }
+  }
+
+  dowloadFileFromAWS = async (url) => {
+    const a = document.createElement('a');
+    a.href = url
+    a.click()
+    a.remove()
+    return { message: "Download sucessful.", confirmation: true, code: 'None' }
   }
 
   render() {
@@ -117,7 +158,9 @@ export default class DataContextProvider extends Component {
         sendPngFiles: this.sendPngFiles,
         getPngFiles: this.getPngFiles,
         requestDownload: this.requestDownload,
-        downloadFileFromUrl: this.downloadFileFromUrl
+        downloadFileFromUrl: this.downloadFileFromUrl,
+        getPngFilesFromId: this.getPngFilesFromId,
+        dowloadFileFromAWS: this.dowloadFileFromAWS
       }}>
         {this.props.children}
       </DataContext.Provider>

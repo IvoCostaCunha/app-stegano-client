@@ -98,7 +98,8 @@ export default class AuthContextProvider extends Component {
 
   signUp = async (signUpData) => {
     try {
-      let request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/0.1/auth/signup", {
+      // "https://app-stegano-api-8fb6844c2e45.herokuapp.com/0.1/auth/signup"
+      let request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signup", {
         method: "POST",
         headers: {
           'Accept': 'application/json',

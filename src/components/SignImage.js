@@ -13,7 +13,7 @@ import DeleteForeverIconRounded from '@mui/icons-material/DeleteForeverRounded';
 import DriveFolderUploadRoundedIcon from '@mui/icons-material/DriveFolderUploadRounded';
 import FileOpenRoundedIcon from '@mui/icons-material/FileOpenRounded';
 
-export default function InputFileUpload() {
+export default function SignImage() {
   const dataContext = useContext(DataContext)
   const authContext = useContext(AuthContext)
 

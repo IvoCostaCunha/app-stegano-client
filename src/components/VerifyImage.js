@@ -17,7 +17,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { grey } from '@mui/material/colors';
 
 
-export default function VerifyImage(props) {
+export default function VerifyImage() {
   const authContext = useContext(AuthContext)
   const dataContext = useContext(DataContext)
 

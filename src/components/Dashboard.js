@@ -5,12 +5,13 @@ import Copyright from './Copyright';
 
 import { Box, ImageList, ImageListItem, ListSubheader, ImageListItemBar, IconButton, Snackbar, Alert } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import { grey } from '@mui/material/colors';
 
 import { AuthContext } from '../contexts/AuthContext';
 import { DataContext } from '../contexts/DataContext';
 
-export default function Dashboard(props) {
+export default function Dashboard() {
   const authContext = useContext(AuthContext)
   const dataContext = useContext(DataContext)
 
@@ -18,7 +19,6 @@ export default function Dashboard(props) {
   const [severity, setSeverity] = useState('success')
   const [status, setStatus] = useState('')
   const [showStatus, setShowStatus] = useState(false)
-  const [loaded, setLoaded] = useState(false)
   const handleClose = async () => { setShowStatus(false) }
 
   const [userImgs, setUserImgs] = useState([])
@@ -36,12 +36,24 @@ export default function Dashboard(props) {
     setShowStatus(true)
   }
 
+  const handleDelete = async (img) => {
+    const response = await dataContext.deletePngFiles(authContext.id, img.filename)
+    if (response.confirmation) {
+      setSeverity('success')
+      setStatus(response.message + ` (code: ${response.code})`)
+    }
+    else {
+      setSeverity('error')
+      setStatus(response.error + ` (code: ${response.code})`)
+    }
+    setShowStatus(true)
+  }
+
   const getImgs = async () => {
-    if(loaded) return null
     const response = await dataContext.getPngFilesFromId(authContext.id)
-    if(response.confirmation) {
-      response.data.forEach(url => {
-        setUserImgs(prevState => [...prevState, {url: url}]);
+    if (response.confirmation) {
+      response.data.forEach(file => {
+        setUserImgs(prevState => [...prevState, { id: file.id, ownerId: file.ownerId, filename: file.filename, url: file.url }]);
       });
       setSeverity('success')
       setStatus(response.message + ` (code: ${response.code})`)
@@ -51,14 +63,12 @@ export default function Dashboard(props) {
       setStatus(response.error + ` (code: ${response.code})`)
     }
     setShowStatus(true)
-    console.log('1')
   }
 
 
-  useEffect( () => {
+  useEffect(() => {
     getImgs()
-    setLoaded(true)
-  })
+  }, [])
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -83,7 +93,7 @@ export default function Dashboard(props) {
             <ListSubheader >December</ListSubheader>
           </ImageListItem>
           {userImgs.map((img) => (
-            <ImageListItem key={img.url}>
+            <ImageListItem key={img.id}>
               <img
                 src={img.url}
                 srcSet={img.url}
@@ -93,14 +103,23 @@ export default function Dashboard(props) {
               />
               <ImageListItemBar
                 title={img.filename}
-                subtitle={authContext.username}
+                subtitle={img.ownerId}
                 actionIcon={
-                  <IconButton
-                    sx={{ color: grey[200] }}
-                    onClick={() => { handleDownload(img) }}
-                  >
-                    <SaveIcon />
-                  </IconButton>
+                  <>
+                    <IconButton
+                      sx={{ color: grey[200] }}
+                      onClick={() => { handleDownload(img) }}
+                    >
+                      <SaveIcon />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: grey[200] }}
+                      onClick={() => { handleDelete(img) }}
+                    >
+                      <DeleteForeverRoundedIcon />
+                    </IconButton>
+
+                  </>
                 }
               />
             </ImageListItem>

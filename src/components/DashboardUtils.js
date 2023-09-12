@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 
 
-export default function DashboardUtils(props) {
+export default function DashboardUtils() {
     const context = useContext(AuthContext);
     const navigate = useNavigate()
 

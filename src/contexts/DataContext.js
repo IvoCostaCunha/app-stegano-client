@@ -52,8 +52,6 @@ export default class DataContextProvider extends Component {
       const requestJSON = await request.json()
 
       if (request.status === 200) {
-        console.log(requestJSON.message)
-
         const downloadId = requestJSON.download_id
 
         const downloadRequest = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/download-request", {
@@ -72,16 +70,19 @@ export default class DataContextProvider extends Component {
 
         if (downloadRequest.status == 200) {
           downloadRequestJSON['urls'].forEach(url => {
-            this.dowloadFileFromAWS(url)
+            this.dowloadFileFromAWS(url.url)
           })
           return { message: requestJSON.message, confirmation: true, code: request.status }
         }
+        else {
+          return { error: requestJSON.error, confirmation: false, code: request.status }
+        }
+
 
       }
       else {
         return { error: requestJSON.error, confirmation: false, code: request.status }
       }
-
     } catch (err) {
       console.log(err)
       return { error: err.message, confirmation: false, code: "Unknown" }
@@ -90,7 +91,8 @@ export default class DataContextProvider extends Component {
 
   getPngFilesFromId = async (id) => {
     try {
-      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/getfilesbyid", {
+      // "https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/getfilesbyid"
+      const request = await fetch("http://localhost:5000/api/0.1/files/getfilesbyid", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -104,7 +106,7 @@ export default class DataContextProvider extends Component {
       const requestJSON = await request.json()
 
       if (request.status === 200) {
-        return { message: requestJSON.message, confirmation: true, code: request.status, data: requestJSON.urls }
+        return { message: requestJSON.message, confirmation: true, code: request.status, data: requestJSON.files }
       }
       else {
         return { error: requestJSON.error, confirmation: true, code: request.status }
@@ -115,7 +117,6 @@ export default class DataContextProvider extends Component {
       console.log(err)
       return { error: err.message, confirmation: false, code: "Unknown" }
     }
-    return id
   }
 
   downloadFileFromUrl = async (url, filename) => {
@@ -151,6 +152,11 @@ export default class DataContextProvider extends Component {
     return { message: "Download sucessful.", confirmation: true, code: 'None' }
   }
 
+  deletePngFiles = async (id, filename) => {
+    // ask API to delete file
+    return { message: "TODO", confirmation: true, code: "unknown" }
+  }
+
   render() {
     return (
       <DataContext.Provider value={{
@@ -160,7 +166,8 @@ export default class DataContextProvider extends Component {
         requestDownload: this.requestDownload,
         downloadFileFromUrl: this.downloadFileFromUrl,
         getPngFilesFromId: this.getPngFilesFromId,
-        dowloadFileFromAWS: this.dowloadFileFromAWS
+        dowloadFileFromAWS: this.dowloadFileFromAWS,
+        deletePngFiles: this.deletePngFiles
       }}>
         {this.props.children}
       </DataContext.Provider>

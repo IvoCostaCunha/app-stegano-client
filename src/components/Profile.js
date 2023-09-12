@@ -6,7 +6,7 @@ import Copyright from './Copyright';
 import { Container, Button, TextField, Toolbar, Box, Typography, Snackbar, Alert, } from '@mui/material';
 import { red, green } from '@mui/material/colors';
 
-export default function SignImage(props) {
+export default function SignImage() {
   const authContext = useContext(AuthContext);
 
   // Severities -> error, warning, info, success

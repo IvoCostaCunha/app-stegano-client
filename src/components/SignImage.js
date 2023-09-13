@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { DataContext } from '../contexts/DataContext';
 
@@ -13,6 +13,9 @@ import DeleteForeverIconRounded from '@mui/icons-material/DeleteForeverRounded';
 import DriveFolderUploadRoundedIcon from '@mui/icons-material/DriveFolderUploadRounded';
 import FileOpenRoundedIcon from '@mui/icons-material/FileOpenRounded';
 
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 export default function SignImage() {
   const dataContext = useContext(DataContext)
   const authContext = useContext(AuthContext)
@@ -26,6 +29,9 @@ export default function SignImage() {
   const [loading, setLoading] = React.useState(false);
 
   const [tempImgToUpload, setTempImpToUpload] = useState([])
+
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleImportFiles = async (e) => {
     e.preventDefault()
@@ -43,7 +49,6 @@ export default function SignImage() {
   }
 
   const handleRemoveImg = async (img) => {
-    console.log(img.url)
     setTempImpToUpload(tempImgToUpload.filter(item => item.url !== img.url))
     URL.revokeObjectURL(img.url)
   }
@@ -132,7 +137,7 @@ export default function SignImage() {
         </Toolbar>
 
         <Box container margin={2}>
-          <ImageList cols={3}>
+          <ImageList  cols={mobile ? 1 : 3} >
             {tempImgToUpload.map((img) => (
               <ImageListItem key={img.url}>
                 <img

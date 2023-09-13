@@ -1,4 +1,4 @@
-import React, { Component, createContext } from "react";
+import React, { Component, createContext, useState } from "react";
 
 import { AuthContext } from "./AuthContext";
 
@@ -70,7 +70,7 @@ export default class DataContextProvider extends Component {
 
         if (downloadRequest.status == 200) {
           downloadRequestJSON['urls'].forEach(url => {
-            this.dowloadFileFromAWS(url.url)
+            this.dowloadFileFromAWS(url.url).then( () => {console.log('File done.')})
           })
           return { message: requestJSON.message, confirmation: true, code: request.status }
         }
@@ -152,9 +152,34 @@ export default class DataContextProvider extends Component {
     return { message: "Download sucessful.", confirmation: true, code: 'None' }
   }
 
-  deletePngFiles = async (id, filename) => {
+  deletePngFile = async (id, filename) => {
     // ask API to delete file
-    return { message: "TODO", confirmation: true, code: "unknown" }
+    try {
+      const request = await fetch("http://localhost:5000/api/0.1/files/deletefile", {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: id,
+          filename: filename
+        }),
+      })
+
+      const requestJSON = await request.json()
+
+      if(request.status == 200) {
+        return { message: requestJSON.message, confirmation: true, code: request.status }
+      }
+      else {
+        return { error: requestJSON.error, confirmation: false, code: request.status }
+      }
+
+    } catch (err) {
+      console.log(err)
+      return { error: 'Img could not be deleted.', confirmation: false, code: "Unknown" }
+    }
   }
 
   render() {
@@ -162,12 +187,11 @@ export default class DataContextProvider extends Component {
       <DataContext.Provider value={{
         ...this.state,
         sendPngFiles: this.sendPngFiles,
-        getPngFiles: this.getPngFiles,
         requestDownload: this.requestDownload,
         downloadFileFromUrl: this.downloadFileFromUrl,
         getPngFilesFromId: this.getPngFilesFromId,
         dowloadFileFromAWS: this.dowloadFileFromAWS,
-        deletePngFiles: this.deletePngFiles
+        deletePngFile: this.deletePngFile
       }}>
         {this.props.children}
       </DataContext.Provider>

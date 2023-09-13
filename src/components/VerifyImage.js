@@ -16,6 +16,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { grey } from '@mui/material/colors';
 
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function VerifyImage() {
   const authContext = useContext(AuthContext)
@@ -28,6 +30,9 @@ export default function VerifyImage() {
 
   const [imageList, setImageList] = React.useState([
   ])
+
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleRemoveImg = async (img) => {
     console.log(img.url)
@@ -115,7 +120,7 @@ export default function VerifyImage() {
 
         {/* To display what images are gonna be searched */}
         <Grid container margin={2} sx={{ display: showSearch }}>
-          <ImageList cols={3}>
+          <ImageList cols={mobile ? 1 : 3}>
             {imageList.map((img) => (
               <ImageListItem key={img.url}>
                 <img

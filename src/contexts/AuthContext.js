@@ -1,25 +1,23 @@
-import React, { Component, createContext } from "react";
+import React, { Component, createContext, useEffect, useState } from "react";
 
 // Done using this tutorial https://www.youtube.com/watch?v=CGRpfIUURE0
 export const AuthContext = createContext()
 
-export default class AuthContextProvider extends Component {
+const AuthContextProvider = (props) => {
+  const [state, setState] = useState({
+    authentified: false,
+    id: Number(localStorage.getItem('id')),
+    username: localStorage.getItem('username'),
+    email: localStorage.getItem('email'),
+    created_at: localStorage.getItem('created_at'),
+    refreshToken: localStorage.getItem('refreshToken'),
+    accessToken: localStorage.getItem('accessToken')
+  })
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      authentified: false,
-      token: localStorage.getItem('token'),
-      id: Number(localStorage.getItem('id')),
-      username: localStorage.getItem('username'),
-      email: localStorage.getItem('email'),
-      created_at: localStorage.getItem('created_at')
-    }
-  }
-
-  signIn = async (signInData) => {
+  const signIn = async (signInData) => {
+    // https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signin
     try {
-      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signin", {
+      const request = await fetch("http://localhost:5000/api/0.1/auth/signin", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -35,19 +33,15 @@ export default class AuthContextProvider extends Component {
       const requestJSON = await request.json()
 
       if (request.status === 200) {
-        // this.state.token = requestJSON.token
-        // this.state.id = requestJSON.id
-        // this.state.email = requestJSON.email
-        // this.state.username = requestJSON.username
-        // this.state.created_at = requestJSON.created_at
 
-        this.setState(prevState => ({ ...prevState, id: requestJSON.id }));
-        this.setState(prevState => ({ ...prevState, email: requestJSON.email }));
-        this.setState(prevState => ({ ...prevState, username: requestJSON.username }));
-        this.setState(prevState => ({ ...prevState, created_at: requestJSON.created_at }));
-        this.setState(prevState => ({ ...prevState, token: requestJSON.token }))
-        const auth = await this.verifyToken()
-        this.setState(prevState => ({ ...prevState, authentified:  auth.confirmation}))
+        setState(prevState => ({ ...prevState, id: requestJSON.user.id }));
+        setState(prevState => ({ ...prevState, email: requestJSON.user.email }));
+        setState(prevState => ({ ...prevState, username: requestJSON.user.username }));
+        setState(prevState => ({ ...prevState, created_at: requestJSON.user.created_at }));
+        setState(prevState => ({ ...prevState, token: requestJSON.user.token }))
+        setState(prevState => ({ ...prevState, refreshToken: requestJSON.user.refreshToken }))
+        setState(prevState => ({ ...prevState, accessToken: requestJSON.user.accessToken }))
+        setState(prevState => ({ ...prevState, authentified: true }))
 
         console.log(requestJSON.message)
         return { message: requestJSON.message, confirmation: true, code: request.status }
@@ -63,24 +57,26 @@ export default class AuthContextProvider extends Component {
     }
   }
 
-  signOut = async () => {
+  const signOut = async () => {
     // Send request to purge user token on API
+    // https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signout
     try {
-      const request = await fetch(`https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signout`, {
+      const request = await fetch(`http://localhost:5000/api/0.1/auth/signout`, {
         method: "POST",
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + state.accessToken
         },
         body: JSON.stringify({
-          id: this.state.id,
+          id: state.id,
         })
       })
       const requestJSON = await request.json()
 
       // Delete cookies associated with user and state vars
-      this.purgeStateVars()
-      this.purgeLocalStorage()
+      purgeStateVars()
+      purgeLocalStorage()
 
       if (request.status === 200) {
         console.log(requestJSON.message)
@@ -96,7 +92,7 @@ export default class AuthContextProvider extends Component {
     }
   }
 
-  signUp = async (signUpData) => {
+  const signUp = async (signUpData) => {
     try {
       // "https://app-stegano-api-8fb6844c2e45.herokuapp.com/0.1/auth/signup"
       let request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signup", {
@@ -128,16 +124,17 @@ export default class AuthContextProvider extends Component {
     }
   }
 
-  updateUser = async (updateData) => {
+  const updateUser = async (updateData) => {
     try {
       let request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/user/updateuser", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + state.accessToken
         },
         body: JSON.stringify({
-          id: this.state.id,
+          id: state.id,
           username: updateData.username,
           email: updateData.email
         }),
@@ -146,9 +143,8 @@ export default class AuthContextProvider extends Component {
       const requestJSON = await request.json()
 
       if (request.status === 200) {
-        this.setState(prevState => ({ ...prevState, email: updateData.email }));
-        this.setState(prevState => ({ ...prevState, username: updateData.username }));
-        this.updateLocalStorage(this.state.token, this.state.id, updateData.email, updateData.username, this.state.created_at)
+        setState(prevState => ({ ...prevState, email: updateData.email }));
+        setState(prevState => ({ ...prevState, username: updateData.username }));
         console.log(requestJSON.message)
         return { message: requestJSON.message, confirmation: true, code: request.status }
       }
@@ -164,17 +160,18 @@ export default class AuthContextProvider extends Component {
     }
   }
 
-  verifyToken = async () => {
+  const verifyToken = async () => {
     try {
-      const request = await fetch("hhttps://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/verifytoken", {
+      const request = await fetch("http://localhost:5000/api/0.1/auth/verifytoken", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + state.accessToken
         },
         body: JSON.stringify({
-          id: this.state.id,
-          token: this.state.token
+          id: state.id,
+          token: state.token
         })
       })
 
@@ -193,34 +190,29 @@ export default class AuthContextProvider extends Component {
     }
   }
 
-  updateLocalStorage = async (token, id, email, username, created_at) => {
-    localStorage.setItem('token', token)
-    localStorage.setItem('id', id)
-    localStorage.setItem('email', email)
-    localStorage.setItem('username', username)
-    localStorage.setItem('created_at', created_at)
-  }
-
-  purgeLocalStorage = async () => {
+  const purgeLocalStorage = async () => {
     localStorage.clear();
   }
 
-  purgeStateVars = async () => {
-    this.setState(prevState => ({ ...prevState, token: '' }));
-    this.setState(prevState => ({ ...prevState, id: '' }));
-    this.setState(prevState => ({ ...prevState, email: '' }));
-    this.setState(prevState => ({ ...prevState, username: '' }));
-    this.setState(prevState => ({ ...prevState, created_at: '' }))
+  const purgeStateVars = async () => {
+    setState({})
   }
 
-
-
-  render() {
-    return (
-      <AuthContext.Provider value={{ ...this.state, signIn: this.signIn, signUp: this.signUp, signOut: this.signOut, updateUser: this.updateUser, verifyToken: this.verifyToken }}>
-        {this.props.children}
-      </AuthContext.Provider>
-    )
+  useEffect = () => {
+    localStorage.setItem('token', state.token)
+    localStorage.setItem('refreshToken', state.refreshToken)
+    localStorage.setItem('accessToken', state.accessToken)
+    localStorage.setItem('id', state.id)
+    localStorage.setItem('email', state.email)
+    localStorage.setItem('username', state.username)
+    localStorage.setItem('created_at', state.created_at)
   }
 
+  return (
+    <AuthContext.Provider value={{ ...state, signIn, signUp, signOut, updateUser, verifyToken }}>
+      {props.children}
+    </AuthContext.Provider>
+  )
 }
+
+export default AuthContextProvider

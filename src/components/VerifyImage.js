@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { DataContext } from '../contexts/DataContext';
 import Navbar from './Navbar';
@@ -71,6 +71,15 @@ export default function VerifyImage() {
     setShowResults('none')
   }
 
+  useEffect(() => {
+    return (() => {
+      imageList.forEach(img => {
+        URL.revokeObjectURL(img.url)
+      });
+      setImageList([])
+    })
+  }, [])
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Navbar />
@@ -89,7 +98,7 @@ export default function VerifyImage() {
               startIcon={<DriveFolderUploadRoundedIcon />}
               onClick={() => { document.getElementById('input_import_files').click() }}
             >
-              Import files
+              {mobile ? 'Import': 'Import files'}
               <input
                 id='input_import_files'
                 type="file"
@@ -106,20 +115,20 @@ export default function VerifyImage() {
               loadingPosition="start"
               variant="contained"
             >
-              <span>Search autors</span>
+              {mobile ? 'Search': 'Search autors'}
             </LoadingButton>
             <Button
               startIcon={<YoutubeSearchedForRoundedIcon />}
               onClick={handleResetSearch}
               variant="contained"
             >
-              <span>Reset search</span>
+              {mobile ? 'Reset': 'Reset search'}
             </Button>
           </ButtonGroup>
         </Toolbar>
 
         {/* To display what images are gonna be searched */}
-        <Grid container margin={2} sx={{ display: showSearch }}>
+        <Box container margin={2} sx={{ display: showSearch }}>
           <ImageList cols={mobile ? 1 : 3}>
             {imageList.map((img) => (
               <ImageListItem key={img.url}>
@@ -144,7 +153,7 @@ export default function VerifyImage() {
               </ImageListItem>
             ))}
           </ImageList>
-        </Grid>
+        </Box>
 
 
         {/* To display results */}
@@ -214,7 +223,7 @@ export default function VerifyImage() {
               </Grid>
             ))}
         </Grid>
-        <Copyright />
+        <Copyright/>
       </Box>
     </Box>
   )

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from './Navbar';
 import Copyright from './Copyright';
 
-import { Link, Box, ImageList, ImageListItem, ListSubheader, ImageListItemBar, IconButton, Snackbar, Alert, Typography } from '@mui/material';
+import { Link, Box, ImageList, ImageListItem, ImageListItemBar, IconButton, Snackbar, Alert, Typography } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import { grey } from '@mui/material/colors';
@@ -13,10 +13,13 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { AuthContext } from '../contexts/AuthContext';
 import { DataContext } from '../contexts/DataContext';
+import { AppContext } from '../contexts/AppContext';
 
 export default function Dashboard() {
+
   const authContext = useContext(AuthContext)
   const dataContext = useContext(DataContext)
+  const appContext = useContext(AppContext)
 
   const navigate = useNavigate()
 
@@ -28,10 +31,10 @@ export default function Dashboard() {
   const handleClose = async () => { setShowStatus(false) }
 
   const [userImgs, setUserImgs] = useState([])
-  const [isEmptyImgs, setIsEmptyImgs] = useState(true)
+  const [isEmptyImgs, setIsEmptyImgs] = useState(false)
 
-  const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const theme = useTheme()
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const handleDownload = async (img) => {
     const response = await dataContext.dowloadFileFromAWS(img.url)
@@ -77,16 +80,14 @@ export default function Dashboard() {
     setShowStatus(true)
   }
 
-
   useEffect(() => {
-    getImgs().then(() => {
-      if (userImgs.length > 0) setIsEmptyImgs(false)
-    })
+    getImgs()
+    if (userImgs.length == 0) setIsEmptyImgs(true)
+    appContext.setCurrentPage('Dashboard')
+    console.log(userImgs)
   }, [])
 
-  useEffect(() => {
-    console.log(userImgs)
-  })
+
 
   useEffect(() => {
     setSeverity('info')
@@ -115,7 +116,7 @@ export default function Dashboard() {
         }}
       >
 
-        <Box container margin={2}>
+        <Box margin={2}>
           <ImageList cols={mobile ? 1 : 3} sx={{ display: isEmptyImgs ? 'none' : 'grid' }}>
             {userImgs.map((img) => (
               <ImageListItem key={img.url}>
@@ -151,7 +152,7 @@ export default function Dashboard() {
             ))}
           </ImageList>
 
-          <Typography variant="h5" sx={{ display: isEmptyImgs ? '' : 'none', textAlign: 'center', paddingTop: '30px' }} fullWidth>
+          <Typography fullWidth variant="h5" sx={{ display: isEmptyImgs ? '' : 'none', textAlign: 'center', paddingTop: '30px' }} >
             You have not yet signed any image ? <br />
             <Link variant="h6"
               onClick={() => { navigate('/sign-image', { replace: true }) }}
@@ -159,9 +160,10 @@ export default function Dashboard() {
               Start here ! </Link>
           </Typography>
         </Box>
+        <Copyright />
       </Box>
 
 
     </Box>
-  );
+  )
 }

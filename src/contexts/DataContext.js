@@ -1,18 +1,15 @@
-import React, { Component, createContext, useState } from "react";
+import React, { Component, createContext, useContext, useState } from "react";
 
 import { AuthContext } from "./AuthContext";
 
 export const DataContext = createContext()
 
-export default class DataContextProvider extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      // For later
-    }
-  }
+const DataContextProvider = (props) => {
+  const authContext = useContext(AuthContext)
 
-  requestDownload = async (filesId, id) => {
+  const [state, setState] = useState([])
+
+  const requestDownload = async (filesId, id) => {
     try {
       const request = await fetch('https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/upload-request', {
         method: "POST",
@@ -42,7 +39,7 @@ export default class DataContextProvider extends Component {
     }
   }
 
-  sendPngFiles = async (id, files) => {
+  const sendPngFiles = async (id, files) => {
     try {
       const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/upload", {
         method: "POST",
@@ -70,7 +67,7 @@ export default class DataContextProvider extends Component {
 
         if (downloadRequest.status == 200) {
           downloadRequestJSON['urls'].forEach(url => {
-            this.dowloadFileFromAWS(url.url).then( () => {console.log('File done.')})
+            dowloadFileFromAWS(url.url).then(() => { console.log('File done.') })
           })
           return { message: requestJSON.message, confirmation: true, code: request.status }
         }
@@ -89,14 +86,15 @@ export default class DataContextProvider extends Component {
     }
   }
 
-  getPngFilesFromId = async (id) => {
+  const getPngFilesFromId = async (id) => {
     try {
       // "https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/getfilesbyid"
       const request = await fetch("http://localhost:5000/api/0.1/files/getfilesbyid", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + authContext.accessToken
         },
         body: JSON.stringify({
           id: id
@@ -119,7 +117,7 @@ export default class DataContextProvider extends Component {
     }
   }
 
-  downloadFileFromUrl = async (url, filename) => {
+  const downloadFileFromUrl = async (url, filename) => {
     try {
       const request = await fetch(url, {
         method: "GET"
@@ -144,7 +142,7 @@ export default class DataContextProvider extends Component {
     }
   }
 
-  dowloadFileFromAWS = async (url) => {
+  const dowloadFileFromAWS = async (url) => {
     const a = document.createElement('a');
     a.href = url
     a.click()
@@ -152,14 +150,15 @@ export default class DataContextProvider extends Component {
     return { message: "Download sucessful.", confirmation: true, code: 'None' }
   }
 
-  deletePngFile = async (id, filename) => {
+  const deletePngFile = async (id, filename) => {
     // ask API to delete file
     try {
       const request = await fetch("http://localhost:5000/api/0.1/files/deletefile", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + authContext.accessToken
         },
         body: JSON.stringify({
           id: id,
@@ -169,7 +168,7 @@ export default class DataContextProvider extends Component {
 
       const requestJSON = await request.json()
 
-      if(request.status == 200) {
+      if (request.status == 200) {
         return { message: requestJSON.message, confirmation: true, code: request.status }
       }
       else {
@@ -182,19 +181,11 @@ export default class DataContextProvider extends Component {
     }
   }
 
-  render() {
-    return (
-      <DataContext.Provider value={{
-        ...this.state,
-        sendPngFiles: this.sendPngFiles,
-        requestDownload: this.requestDownload,
-        downloadFileFromUrl: this.downloadFileFromUrl,
-        getPngFilesFromId: this.getPngFilesFromId,
-        dowloadFileFromAWS: this.dowloadFileFromAWS,
-        deletePngFile: this.deletePngFile
-      }}>
-        {this.props.children}
-      </DataContext.Provider>
-    )
-  }
+  return(
+    <DataContext.Provider value={{ ...state, requestDownload, sendPngFiles, getPngFilesFromId, downloadFileFromUrl, dowloadFileFromAWS, deletePngFile }}>
+      {props.children}
+    </DataContext.Provider>
+  )
 }
+
+export default DataContextProvider

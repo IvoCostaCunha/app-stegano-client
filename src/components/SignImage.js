@@ -5,9 +5,9 @@ import { DataContext } from '../contexts/DataContext';
 import Navbar from './Navbar';
 import Copyright from './Copyright';
 
-import { Button, Container, Grid, ImageList, ImageListItem, Typography, Box, Toolbar, ImageListItemBar, IconButton, ButtonGroup, Snackbar, Alert } from '@mui/material';
+import { Button, ImageList, ImageListItem, Box, Toolbar, ImageListItemBar, IconButton, ButtonGroup, Snackbar, Alert } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { red, green, grey } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 import DeleteIconRounded from '@mui/icons-material/DeleteRounded';
 import DeleteForeverIconRounded from '@mui/icons-material/DeleteForeverRounded';
 import DriveFolderUploadRoundedIcon from '@mui/icons-material/DriveFolderUploadRounded';
@@ -84,6 +84,15 @@ export default function SignImage() {
     setShowStatus(true)
   }
 
+  useEffect(() => {
+    return (() => {
+      tempImgToUpload.forEach(img => {
+        URL.revokeObjectURL(img.url)
+      });
+      setTempImpToUpload([])
+    })
+  }, [])
+
   return (
     <Box sx={{ display: 'flex' }}>
 
@@ -110,7 +119,7 @@ export default function SignImage() {
               startIcon={<DriveFolderUploadRoundedIcon />}
               onClick={() => { document.getElementById('input_import_files').click() }}
             >
-              Import files
+              {mobile ? 'Import': 'Import files'}
               <input
                 id='input_import_files'
                 type="file"
@@ -126,18 +135,20 @@ export default function SignImage() {
               loadingPosition="start"
               variant="contained"
             >
-              <span>Sign imported images</span>
+              {mobile ? 'Sign': 'Sign imported images'}
+              
             </LoadingButton>
             <Button
               startIcon={<DeleteIconRounded />}
               onClick={removeAllImgs}
             >
-              Remove all images</Button>
+              {mobile ? 'Reset': `Reset all images`}
+            </Button>
           </ButtonGroup>
         </Toolbar>
 
-        <Box container margin={2}>
-          <ImageList  cols={mobile ? 1 : 3} >
+        <Box margin={2}>
+          <ImageList cols={mobile ? 1 : 3} >
             {tempImgToUpload.map((img) => (
               <ImageListItem key={img.url}>
                 <img

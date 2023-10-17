@@ -60,7 +60,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function Dashboard() {
+export default function Navbar() {
   const authContext = useContext(AuthContext);
   const appContext = useContext(AppContext)
 

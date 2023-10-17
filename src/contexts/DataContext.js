@@ -1,4 +1,4 @@
-import React, { Component, createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 import { AuthContext } from "./AuthContext";
 
@@ -65,7 +65,7 @@ const DataContextProvider = (props) => {
 
         const downloadRequestJSON = await downloadRequest.json()
 
-        if (downloadRequest.status == 200) {
+        if (downloadRequest.status === 200) {
           downloadRequestJSON['urls'].forEach(url => {
             dowloadFileFromAWS(url.url).then(() => { console.log('File done.') })
           })
@@ -168,7 +168,7 @@ const DataContextProvider = (props) => {
 
       const requestJSON = await request.json()
 
-      if (request.status == 200) {
+      if (request.status === 200) {
         return { message: requestJSON.message, confirmation: true, code: request.status }
       }
       else {

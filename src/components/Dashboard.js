@@ -87,8 +87,6 @@ export default function Dashboard() {
     console.log(userImgs)
   }, [])
 
-
-
   useEffect(() => {
     setSeverity('info')
     setStatus('Updated.')

@@ -195,7 +195,8 @@ const AuthContextProvider = (props) => {
     setState({})
   }
 
-  useEffect = () => {
+  useEffect(() => {
+    console.log("Updated localstorage")
     localStorage.setItem('token', state.token)
     localStorage.setItem('refreshToken', state.refreshToken)
     localStorage.setItem('accessToken', state.accessToken)
@@ -203,7 +204,7 @@ const AuthContextProvider = (props) => {
     localStorage.setItem('email', state.email)
     localStorage.setItem('username', state.username)
     localStorage.setItem('created_at', state.created_at)
-  }
+  })
 
   return (
     <AuthContext.Provider value={{ ...state, signIn, signUp, signOut, updateUser, verifyToken }}>

@@ -8,6 +8,14 @@ import { grey } from '@mui/material/colors';
 import Link from '@mui/material/Link';
 
 export default function About() {
+  
+  useEffect(() => {
+    console.log("test")
+  })
+
+  console.log("test2")
+
+
   return (
     <Box sx={{ display: 'flex' }}>
 

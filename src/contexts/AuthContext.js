@@ -15,9 +15,8 @@ const AuthContextProvider = (props) => {
   })
 
   const signIn = async (signInData) => {
-    // https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signin
     try {
-      const request = await fetch("http://localhost:5000/api/0.1/auth/signin", {
+      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signin", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -59,9 +58,8 @@ const AuthContextProvider = (props) => {
 
   const signOut = async () => {
     // Send request to purge user token on API
-    // https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signout
     try {
-      const request = await fetch(`http://localhost:5000/api/0.1/auth/signout`, {
+      const request = await fetch(`https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signout`, {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -94,8 +92,7 @@ const AuthContextProvider = (props) => {
 
   const signUp = async (signUpData) => {
     try {
-      // "https://app-stegano-api-8fb6844c2e45.herokuapp.com/0.1/auth/signup"
-      let request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/auth/signup", {
+      let request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/0.1/auth/signup", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -162,7 +159,7 @@ const AuthContextProvider = (props) => {
 
   const verifyToken = async () => {
     try {
-      const request = await fetch("http://localhost:5000/api/0.1/auth/verifytoken", {
+      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/0.1/auth/verifytoken", {
         method: "POST",
         headers: {
           'Accept': 'application/json',

@@ -89,7 +89,7 @@ const DataContextProvider = (props) => {
   const getPngFilesFromId = async (id) => {
     try {
       // "https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/getfilesbyid"
-      const request = await fetch("http://localhost:5000/api/0.1/files/getfilesbyid", {
+      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/getfilesbyid", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -153,7 +153,7 @@ const DataContextProvider = (props) => {
   const deletePngFile = async (id, filename) => {
     // ask API to delete file
     try {
-      const request = await fetch("http://localhost:5000/api/0.1/files/deletefile", {
+      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/deletefile", {
         method: "POST",
         headers: {
           'Accept': 'application/json',

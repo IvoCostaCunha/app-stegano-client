@@ -1,20 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React from 'react';
 
 import Navbar from './Navbar'
 import Copyright from './Copyright';
 
-import { Box, Grid, Typography } from '@mui/material';
+import { List, ListItem, Box, Grid, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import Link from '@mui/material/Link';
 
 export default function About() {
-  
-  useEffect(() => {
-    console.log("test")
-  })
-
-  console.log("test2")
-
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -34,11 +26,28 @@ export default function About() {
             <Typography variant='h4' textAlign='center'>About stegno-image</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant='span' textAlign='center' justifyContent='flex-start' fullwidth>
-              DESCRIPTION enim et ullamco anim. Nisi occaecat in amet Lorem non adipisicing deserunt officia. Ex incididunt non proident enim ullamco nostrud ea elit proident laborum. Tempor voluptate reprehenderit ipsum eu consequat ut veniam esse ipsum ullamco.
-              Minim veniam esse eiusmod et enim exercitation adipisicing aute aliqua ad et magna sit. Irure voluptate eu Lorem est. Commodo irure voluptate eiusmod anim id cupidatat elit reprehenderit eiusmod nostrud excepteur. Duis veniam labore reprehenderit quis est.
-              Aliqua culpa ut fugiat ea ad sunt qui anim esse ea veniam culpa velit exercitation. Esse fugiat dolore sint et commodo tempor ullamco Lorem cillum dolor minim sunt cupidatat et. Eu culpa incididunt adipisicing minim amet qui cupidatat deserunt laborum cillum. Esse velit minim et aliquip.
+            <Typography variant='h6' textAlign='center' fullwidth>
+              Description
             </Typography>
+            <Typography variant='span' fullwidth>
+              Stegano image allows you to sign PNG images with the steganography method of LSB.
+            </Typography>
+            <Typography variant='h6' textAlign='center' justifyContent='flex-start' fullwidth>
+              v0.1 known issues:
+            </Typography>
+            <List
+              sx={{
+                listStyleType: 'disc',
+                listStylePosition: 'inside',
+              }}
+            >
+              <ListItem sx={{ display: 'list-item' }}>
+                Deleting an image from dash board deletes all images from UI but not from backend.
+              </ListItem>
+              <ListItem sx={{ display: 'list-item' }}>
+                SignImage onlmy download the 1st image on the list
+              </ListItem>
+            </List>
           </Grid>
 
 

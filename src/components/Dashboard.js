@@ -54,7 +54,6 @@ export default function Dashboard() {
     if (response.confirmation) {
       setSeverity('success')
       setStatus(response.message + ` (code: ${response.code})`)
-      console.log(img.id)
       setUserImgs(userImgs.filter(item => item.id !== img.id))
     }
     else {
@@ -84,7 +83,6 @@ export default function Dashboard() {
     getImgs()
     if (userImgs.length == 0) setIsEmptyImgs(true)
     appContext.setCurrentPage('Dashboard')
-    console.log(userImgs)
   }, [])
 
   useEffect(() => {
@@ -92,6 +90,7 @@ export default function Dashboard() {
     setStatus('Updated.')
     setShowStatus(true)
     setIsEmptyImgs(!userImgs.length > 0)
+    console.log(userImgs)
   }, [userImgs])
 
   return (

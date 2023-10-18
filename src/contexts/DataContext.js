@@ -15,7 +15,8 @@ const DataContextProvider = (props) => {
         method: "POST",
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + state.accessToken
         },
         body: JSON.stringify({
           filesId: filesId,
@@ -43,6 +44,9 @@ const DataContextProvider = (props) => {
     try {
       const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/upload", {
         method: "POST",
+        headers: {
+          'Authorization': 'Bearer ' + authContext.accessToken
+        },
         body: files
       })
 
@@ -55,7 +59,8 @@ const DataContextProvider = (props) => {
           method: "POST",
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authContext.accessToken
           },
           body: JSON.stringify({
             filesId: downloadId,

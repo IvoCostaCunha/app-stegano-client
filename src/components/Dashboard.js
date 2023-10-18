@@ -83,6 +83,7 @@ export default function Dashboard() {
     getImgs()
     if (userImgs.length == 0) setIsEmptyImgs(true)
     appContext.setCurrentPage('Dashboard')
+  console.log(1)
   }, [])
 
   useEffect(() => {

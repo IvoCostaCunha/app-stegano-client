@@ -11,7 +11,7 @@ const DataContextProvider = (props) => {
 
   const requestDownload = async (filesId, id) => {
     try {
-      const request = await fetch('https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/upload-request', {
+      const request = await fetch('http://127.0.0.1:5000/api/0.1/files/upload-request', {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -42,7 +42,7 @@ const DataContextProvider = (props) => {
 
   const sendPngFiles = async (id, files) => {
     try {
-      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/upload", {
+      const request = await fetch("http://127.0.0.1:5000/api/0.1/files/upload", {
         method: "POST",
         headers: {
           'Authorization': 'Bearer ' + authContext.accessToken
@@ -55,7 +55,7 @@ const DataContextProvider = (props) => {
       if (request.status === 200) {
         const downloadId = requestJSON.download_id
 
-        const downloadRequest = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/download-request", {
+        const downloadRequest = await fetch("http://127.0.0.1:5000/api/0.1/files/download-request", {
           method: "POST",
           headers: {
             'Accept': 'application/json',
@@ -94,7 +94,7 @@ const DataContextProvider = (props) => {
   const getPngFilesFromId = async (id) => {
     try {
       // "https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/getfilesbyid"
-      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/getfilesbyid", {
+      const request = await fetch("http://127.0.0.1:5000/api/0.1/files/getfilesbyid", {
         method: "POST",
         headers: {
           'Accept': 'application/json',
@@ -158,7 +158,7 @@ const DataContextProvider = (props) => {
   const deletePngFile = async (id, filename) => {
     // ask API to delete file
     try {
-      const request = await fetch("https://app-stegano-api-8fb6844c2e45.herokuapp.com/api/0.1/files/deletefile", {
+      const request = await fetch("http://127.0.0.1:5000/api/0.1/files/deletefile", {
         method: "POST",
         headers: {
           'Accept': 'application/json',

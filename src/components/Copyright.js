@@ -8,12 +8,14 @@ export default function Copyright(props) {
       
       <Typography variant="body2" color="text.secondary" align="center" {...props}>
         <br/>
-        {'Copyright © '}
+	<Link color="inherit" href="https://opensource.org/license/mit">
+        MIT Licence
+	</Link>
+	{' 2024 @ '}
         <Link color="inherit" href="/app/about">
-          stegano-image
-        </Link>{' '}
-        {new Date().getFullYear()}
-        {'.'}
+          Ivo Costa Cunha
+        </Link>
+	.
       </Typography>
     );
   }

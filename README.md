@@ -21,26 +21,30 @@ This app uses a number of open source projects to work properly:
 - [Bucketeer](https://bucketeer.io/) - Allows to store images in Amazon AWS.
 
 ## Installation
+
 ### Requirements
 - [Node.js](https://nodejs.org/) (Tested in Node.js@16+)
 - [Python](https://www.python.org/) (Tested in Python@3.11.4)
+
 **These 2 must be installed before the next steps.**
+
 ##### Create a suitable directory
 
 **This project has a frontend and a backend so it's dependent on 2 repositories and once set up 2 servers at minimum.**
 
-Windows & Mac & Linux
+#### On Windows & Mac & Linux
 ```sh
 mkdir stegano-image-project && cd stegano-image-project
 git clone git@github.com:IvoCostaCunha/stegano-image.git
 git clone git@github.com:IvoCostaCunha/stegano-image-api.git
 ```
-
 **Start the backend first**
 
-##### backend
-Install the dependencies first then start the backend.
-On Windows:
+### API
+
+How to install the dependencies first then start the backend.
+
+#### On Windows
 ```sh
 cd app-stegano-api
 python -m venv .venv
@@ -50,7 +54,7 @@ pip install -r requirements.txt
 flask run
 ```
 
-On Mac:
+#### On Mac
 ```sh
 cd app-stegano-api
 python -m venv .venv
@@ -66,7 +70,7 @@ brew install postgresql
 flask -run
 ```
 
-On Debian based Linux:
+#### On Debian based Linux
 ```sh
 cd app-stegano-api
 python -m venv .venv
@@ -77,7 +81,7 @@ sudo apt install postgresql
 flask -run
 ```
 
-On Arch based Linux:
+#### On Arch based Linux
 ```sh
 cd app-stegano-api
 python -m venv .venv
@@ -90,14 +94,15 @@ flask -run
 
 On other distributions do the same with your favorite packet manager.
 
-##### frontend
+### Frontend
+
 **Open a new terminal window and cd into stegano-image-project**
-Install the dependencies and start the frontend.
+
+### Install the dependencies and start the frontend.
 ```sh
 cd stegano-image/app-stegano-image
 npm install
 npm start
 ```
-
 ## Note
 This project was one of my last projects during my Master and so while it's functionnal it's not complete. I may complete it or not.
